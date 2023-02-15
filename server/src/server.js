@@ -7,6 +7,7 @@ const server = http.createServer(app)
 const cors = require("cors")
 const usersRoutes = require("./routes/users")
 const accountRoutes = require("./routes/account")
+const postRoutes = require("./routes/posts")
 const connectDB = require("./config/db")
 
 connectDB()
@@ -18,6 +19,7 @@ app.use(cors())
 
 app.use("/", accountRoutes)
 app.use("/user", usersRoutes)
+app.use("/post", postRoutes)
 
 const PORT = 3000
 

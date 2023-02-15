@@ -6,10 +6,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  email: {
-    type: String,
-    required: true
-  },
   password: {
     type: String,
     required: true
@@ -36,11 +32,11 @@ const postSchema = new mongoose.Schema({
     },
     name: {
       type: String,
-      required: true
+      required: false
     },
     text: {
       type: String,
-      required: true
+      required: false
     }
   },
   like: {
