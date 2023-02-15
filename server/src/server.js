@@ -6,6 +6,7 @@ const server = http.createServer(app)
 
 const cors = require("cors")
 const usersRoutes = require("./routes/users")
+const accountRoutes = require("./routes/account")
 const connectDB = require("./config/db")
 
 connectDB()
@@ -15,7 +16,8 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(cors())
 
-app.use("/users", usersRoutes)
+app.use("/", accountRoutes)
+app.use("/user", usersRoutes)
 
 const PORT = 3000
 
