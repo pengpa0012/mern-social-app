@@ -15,17 +15,17 @@ const userSchema = new mongoose.Schema({
 const postSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true
+    required: false
   },
   title: {
     type: String,
-    required: true
+    required: false
   },
   description: {
     type: String,
-    required: true
+    required: false
   },
-  comments: {
+  comments: [{
     user: {
       type: Schema.Types.ObjectId,
       ref: 'user'
@@ -37,14 +37,18 @@ const postSchema = new mongoose.Schema({
     text: {
       type: String,
       required: false
+    },
+    date: {
+      type: Date,
+      default: Date.now
     }
-  },
-  like: {
+  }],
+  like: [{
     user: {
       type: Schema.Types.ObjectId,
       ref: 'user'
     }
-  },
+  }],
 })
 
 module.exports = {

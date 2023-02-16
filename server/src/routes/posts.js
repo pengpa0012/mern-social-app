@@ -36,20 +36,73 @@ router.post("/deletePost", verifyJWT, async (req, res) => {
     }
 })
 
-router.post("/editPost", verifyJWT, (req, res) => {
-  
+router.post("/editPost", verifyJWT, async (req, res) => {
+  const { _id, values } = req.body
+
+  const result = await Post.findOneAndUpdate({_id}, {...values})
+
+  if(result) {
+    res.status(200).send({ message: "Edited Successfully", result: values })
+  } else {
+    res.status(200).send({ message: "Error Edit Post" })
+  }
 })
 
-router.post("/commentPost", verifyJWT, (req, res) => {
-  
+router.post("/commentPost", verifyJWT, async (req, res) => {
+  const { _id, comments } = req.body
+
+  const post = await Post.findOne({_id})
+
+  if(!post) {
+    return res.status(500).send({ message: "Cannot find post" })
+  }
+
+  const newComment = {
+    user: comments.user,
+    name: comments.name,
+    text: comments.text,
+    date: Date.now()
+  }
+
+  post.comments.push(newComment)
+  const result = await post.save()
+
+  if(result) {
+    res.status(200).send({ message: newComment })
+  } else {
+    res.status(200).send({ message: "Error Edit Post" })
+  }
 })
 
-router.post("/likePost", verifyJWT, (req, res) => {
-  
+router.post("/likePost", verifyJWT, async (req, res) => {
+  const { _id, userId } = req.body
+
+  const post = await Post.findOne({_id})
+
+  if(!post) {
+    return res.status(500).send({ message: "Cannot find post" })
+  }
+
+  if(post.like.filter(like => like.user == userId).length != 0) {
+    return res.status(500).send({ message: "Already liked the post" })
+  }
+
+  const newLike = {
+    user: userId
+  }
+
+  post.like.push(newLike)
+  const result = await post.save()
+
+  if(result) {
+    res.status(200).send({ message: "Post Liked" })
+  } else {
+    res.status(200).send({ message: "Error Edit Post" })
+  }
 })
 
 router.get("/getAllPosts", verifyJWT, async (req, res) => {
-  const result = await Post.find({})
+  const result = await Post.find()
 
   if(result) {
     res.status(200).send({ Posts: result })
