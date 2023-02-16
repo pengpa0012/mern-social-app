@@ -14,4 +14,17 @@ router.get("/getUsers", verifyJWT, async (req, res) => {
   }
 })
 
+router.post("/editProfile", verifyJWT, async (req, res) => {
+  const { _id, values } = req.body
+
+  const result = await Users.findOneAndUpdate({_id},{ bio: {...values}})
+
+  if(result) {
+    res.status(200).send({message: "Edit profile successfully"})
+  } else {
+    res.status(500).send({message: "Error"})
+  }
+})
+
+
 module.exports = router

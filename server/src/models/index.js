@@ -10,6 +10,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  bio: {
+    interests: [{type: String}],
+    birthday: {
+      type: Date
+    }, 
+    age: {
+      type: Number
+    },
+    gender: {
+      type: String
+    }
+  }
 })
 
 const postSchema = new mongoose.Schema({
