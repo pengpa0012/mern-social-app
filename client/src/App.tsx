@@ -8,25 +8,24 @@ import { Signup } from './pages/Signup'
 function App() {
   const navigate = useNavigate()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [showComment, setShowComment] = useState([{}])
-  // useEffect(() => {
-  //   if(!isLoggedIn) {
-  //    return navigate("/login")
-  //   }
-  // }, [isLoggedIn])
+  const [showComment, setShowComment] = useState([{
+    id: 0,
+    isDisplayed: false
+  }])
   
-  const onShowComment = (id) => {
+  useEffect(() => {
+    if(!isLoggedIn) {
+     return navigate("/login")
+    }
+  }, [isLoggedIn])
+  
+  const onShowComment = (id: number) => {
     setShowComment(prevItems => {
       const index = prevItems.findIndex(item => item.id === id);
+      console.log(index)
       if (index === -1) {
         // item with given id doesn't exist, so add a new one
-        return [...prevItems.filter(element => {
-          if (Object.keys(element).length !== 0) {
-            return true;
-          }
-      
-          return false;
-        }), { id, isDisplayed: true }];
+        return [...prevItems.filter(e => e?.id !== id && Object.keys(e).length !== 0), { id, isDisplayed: true }];
       } else {
         // item with given id exists, so update its isDisplayed property
         return [
@@ -37,7 +36,7 @@ function App() {
       }
     });
   }
-  console.log(showComment)
+
   return (
     <div className="App">
       <div className="flex justify-between p-4">
@@ -60,7 +59,7 @@ function App() {
                 <p className="text-xl">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis cum, expedita similique nobis quibusdam facilis itaque maiores sed, quas unde ullam animi sit quae odio, voluptatum nesciunt! Dolore cum odio sit voluptatem dignissimos sunt, adipisci dolores neque deserunt quia aliquam necessitatibus enim. Molestiae asperiores nemo numquam quae ea. Perspiciatis, possimus!</p>
                 <div className="flex my-4">
                   <button className="mr-4">Like</button>
-                  <button onClick={() =>onShowComment(i)}>Comment</button>
+                  <button onClick={() => onShowComment(i)}>Comment</button>
                 </div>
                 {
                   showComment[i]?.isDisplayed &&
