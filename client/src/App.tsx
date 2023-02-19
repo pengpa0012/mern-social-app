@@ -14,11 +14,11 @@ function App() {
     isDisplayed: false
   }])
 
-  useEffect(() => {
-    if(!isLoggedIn) {
-     return navigate("/login")
-    }
-  }, [isLoggedIn])
+  // useEffect(() => {
+  //   if(!isLoggedIn) {
+  //    return navigate("/login")
+  //   }
+  // }, [isLoggedIn])
   
   const onShowComment = (id: number) => {
     setShowComment(prevItems => {
