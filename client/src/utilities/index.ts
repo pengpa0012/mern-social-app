@@ -17,12 +17,3 @@ export const onShowComment = (id: number, setter: React.Dispatch<React.SetStateA
     }
   });
 }
-
-export const fetchData = (endpoint: string, values: object) => {
-  fetch(`http://localhost:3000${endpoint}`, values)
-  .then(res => res.json())
-  .then(data => {
-    return data
-  })
-  .catch(console.error)
-}

@@ -5,14 +5,15 @@ import { Header } from './Components/Header'
 import { Post } from './Components/Post'
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("token"))
   const [following, setFollowing] = useState(true)
+  const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   if(!isLoggedIn) {
-  //    return navigate("/login")
-  //   }
-  // }, [isLoggedIn])
+  useEffect(() => {
+    if(!isLoggedIn) {
+     return navigate("/login")
+    }
+  }, [isLoggedIn])
   
   const changeFeed = (following: boolean) => {
     setFollowing(following)
