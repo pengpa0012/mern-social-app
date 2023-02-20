@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FormCover } from '../Components/FormCover'
+import { fetchData } from '../utilities'
 
 export const Signup = () => {
   const onSubmit = (e: any) => {
@@ -9,7 +10,14 @@ export const Signup = () => {
     const username = form.elements['username'].value
     const password = form.elements['password'].value
     const repeatPassword = form.elements['repeat_password'].value
-    if(!username || !password) return
+    if(!username || !password || !repeatPassword) return
+    fetchData("/signup", {
+      method: "POST",
+      body: JSON.stringify({
+        username,
+        password
+      })
+    })
   }
 
   return (

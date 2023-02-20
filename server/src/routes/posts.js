@@ -111,6 +111,17 @@ router.get("/getAllPosts", verifyJWT, async (req, res) => {
   }
 })
 
+router.get("/getComments", verifyJWT, async (req, res) => {
+  const { _id } = req.params
+  const result = await Post.find({_id})
+
+  if(result) {
+    res.status(200).send({ Comments: result.comments })
+  } else {
+    res.status(200).send({ message: "Error Getting Users" })
+  }
+})
+
 
 
 

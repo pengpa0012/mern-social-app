@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Header } from '../Components/Header'
 import { Post } from '../Components/Post'
@@ -16,7 +17,7 @@ export const Profile = () => {
           <li>Interests</li>
         </ul>
         <h2>Your posts</h2>
-        <Post />
+        <Post posts={[1,2]}  />
       </div>
     </>
   )
