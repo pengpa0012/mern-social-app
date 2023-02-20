@@ -1,6 +1,3 @@
-import React from 'react'
-import { Signup } from './Signup'
-import { Link, useNavigate } from 'react-router-dom'
 import { FormCover } from '../Components/FormCover'
 
 export const Login = () => {
