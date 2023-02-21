@@ -26,11 +26,18 @@ function App() {
         "x-access-token": token
       }
     }).then(data => setAllPosts(data.data.Posts))
+    axios.get(`http://localhost:3000/user/getUser?username=${username}`, {
+      headers: {
+        "x-access-token": token
+      }
+    }).then(data => console.log(data.data.user))
   }, [])
   
   const changeFeed = (following: boolean) => {
     setFollowing(following)
   }
+
+  console.log(allPosts)
 
   return (
     <div className="App">

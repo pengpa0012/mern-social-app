@@ -38,10 +38,15 @@ router.post("/editProfile", verifyJWT, async (req, res) => {
 })
 
 router.post("/followUser", verifyJWT, async (req, res) => {
-  const { username, _id } = req.body
+  const { username, user_following } = req.body
 
-  const user = await Users.findOne({_id})
-  user.followers.push(username)
+  const user = await Users.findOne({username})
+  const userFollowing = await Users.findOne({username: user_following})
+
+  user.following.push(user_following)
+  userFollowing.followers.push(username)
+
+  userFollowing.save()
   const result = await user.save()
 
   if(result) {

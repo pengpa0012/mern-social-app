@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   followers: [{type: String}],
+  following: [{type: String}],
   bio: {
     interests: [{type: String}],
     birthday: {
