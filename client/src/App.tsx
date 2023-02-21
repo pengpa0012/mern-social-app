@@ -7,7 +7,8 @@ import { Post } from './Components/Post'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("token"))
-  const [following, setFollowing] = useState(true)
+  const [postTab, setPostTab] = useState(true)
+  const [followingList, setFollowingList] = useState<any[]>([])
   const [allPosts, setAllPosts] = useState([])
   const token = localStorage.getItem("token")
   const username = localStorage.getItem("username")
@@ -30,26 +31,20 @@ function App() {
       headers: {
         "x-access-token": token
       }
-    }).then(data => console.log(data.data.user))
+    }).then(data => setFollowingList(data.data.user.following))
   }, [])
-  
-  const changeFeed = (following: boolean) => {
-    setFollowing(following)
-  }
-
-  console.log(allPosts)
 
   return (
     <div className="App">
       <Header />
       <div className="p-4">
         <ul className="mb-4 flex">
-          <li className="mr-4 cursor-pointer" onClick={() => changeFeed(true)}>Following</li>
-          <li className="cursor-pointer" onClick={() => changeFeed(false)}>All Users</li>
+          <li className="mr-4 cursor-pointer" onClick={() => setPostTab(true)}>Following</li>
+          <li className="cursor-pointer" onClick={() => setPostTab(false)}>All Users</li>
         </ul>
         {
-          following ?
-          <Post posts={allPosts.filter((posts: any) => posts.username == username)} />
+          postTab ?
+          <Post posts={allPosts.filter((posts: any) => followingList.includes(posts.username))} />
           : <Post posts={allPosts} />
         }
       </div>

@@ -1,15 +1,19 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { onShowComment } from '../utilities'
+import * as dayjs from 'dayjs'
 
 export const Post = ({posts}: any) => {
+  const navigate = useNavigate()
   return (
     <div className="my-2">
       {
-        posts.map((item: any, i: number) => (
-          <div className="mb-8 bg-white/10 p-4 rounded-md" key={i}>
+        posts.sort((a: any, b: any) => new Date(b.date) - new Date(a.date)).map((item: any, i: number) => (
+          <div className="mb-4 bg-white/10 p-4 rounded-md" key={i}>
             <div className="flex items-center mb-2">
-              <h1 className="text-2xl mr-4">{item.title}</h1>
-              <p>{item.username}</p>
+              <h1 className="text-2xl">{item.title}</h1>
+              <p className="mx-4" onClick={() => navigate(`/profile/${item.username}`)}>{item.username}</p>
+              <p>{dayjs(item.date).format("MMM DD, YYYY hh:mm:ss a")}</p>
             </div>  
             <p className="text-md">{item.description}</p>
             <div className={`flex mt-4`}>

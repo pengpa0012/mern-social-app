@@ -11,7 +11,8 @@ router.post("/createPost", verifyJWT, async (req, res) => {
   const newPost = new Post({
     username,
     title,
-    description
+    description,
+    date: Date.now()
   })
 
   const result = await newPost.save()

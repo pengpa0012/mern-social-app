@@ -54,7 +54,20 @@ router.post("/followUser", verifyJWT, async (req, res) => {
   } else {
     res.status(200).send({ message: "Error Following User" })
   }
+})
 
+router.post("/unFollowUser", verifyJWT, async (req, res) => {
+  const { username, user_unfollow } = req.body
+
+  const user = await Users.updateOne({username}, { $pull: { following: user_unfollow } })
+  const userFollowing = await Users.updateOne({username: user_unfollow}, { $pull: { followers: username } })
+ 
+  
+  if(user) {
+    res.status(200).send({ message: "User Followed!" })
+  } else {
+    res.status(200).send({ message: "Error Following User" })
+  }
 })
 
 
