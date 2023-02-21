@@ -14,6 +14,17 @@ router.get("/getUsers", verifyJWT, async (req, res) => {
   }
 })
 
+router.get("/getUser", verifyJWT, async (req, res) => {
+  const {username} = req.query
+  const result = await Users.findOne({username})
+
+  if(result) {
+    res.status(200).send({user: result})
+  } else {
+    res.status(500).send({message: "Error"})
+  }
+})
+
 router.post("/editProfile", verifyJWT, async (req, res) => {
   const { _id, values } = req.body
 
@@ -24,6 +35,21 @@ router.post("/editProfile", verifyJWT, async (req, res) => {
   } else {
     res.status(500).send({message: "Error"})
   }
+})
+
+router.post("/followUser", verifyJWT, async (req, res) => {
+  const { username, _id } = req.body
+
+  const user = await Users.findOne({_id})
+  user.followers.push(username)
+  const result = await user.save()
+
+  if(result) {
+    res.status(200).send({ message: "User Followed!" })
+  } else {
+    res.status(200).send({ message: "Error Following User" })
+  }
+
 })
 
 

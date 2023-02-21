@@ -17,6 +17,7 @@ export const Login = () => {
     })
     .then(response => {
       localStorage.setItem("token", response.data.accessToken)
+      localStorage.setItem("username", username)
       Notiflix.Notify.success(response.data.message)
       navigate("/")
     })

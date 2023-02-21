@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './App.css'
@@ -7,13 +8,25 @@ import { Post } from './Components/Post'
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("token"))
   const [following, setFollowing] = useState(true)
+  const [allPosts, setAllPosts] = useState([])
+  const token = localStorage.getItem("token")
+  const username = localStorage.getItem("username")
+ 
   const navigate = useNavigate()
-
+  console.log(allPosts)
   useEffect(() => {
     if(!isLoggedIn) {
      return navigate("/login")
     }
   }, [isLoggedIn])
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/post/getAllPosts", {
+      headers: {
+        "x-access-token": token
+      }
+    }).then(data => setAllPosts(data.data.Posts))
+  }, [])
   
   const changeFeed = (following: boolean) => {
     setFollowing(following)
@@ -29,8 +42,8 @@ function App() {
         </ul>
         {
           following ?
-          <Post posts={[1,2,3]} />
-          : <Post posts={[1,2,3,4,5,6]} />
+          <Post posts={allPosts.filter((posts: any) => posts.username == username)} />
+          : <Post posts={allPosts} />
         }
       </div>
     </div>

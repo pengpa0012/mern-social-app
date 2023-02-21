@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  followers: [{type: String}],
   bio: {
     interests: [{type: String}],
     birthday: {
@@ -61,6 +62,7 @@ const postSchema = new mongoose.Schema({
       ref: 'user'
     }
   }],
+  date: Date
 })
 
 module.exports = {
