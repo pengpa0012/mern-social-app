@@ -8,17 +8,16 @@ export const Post = ({posts}: any) => {
   return (
     <div className="my-2">
       {
-        posts.sort((a: any, b: any) => new Date(b.date) - new Date(a.date)).map((item: any, i: number) => (
+        posts.sort((a: any, b: any) => new Date(b.date).valueOf() - new Date(a.date).valueOf()).map((item: any, i: number) => (
           <div className="mb-4 bg-white/10 p-4 rounded-md" key={i}>
-            <div className="flex items-center mb-2">
-              <h1 className="text-2xl">{item.title}</h1>
-              <p className="mx-4" onClick={() => navigate(`/profile/${item.username}`)}>{item.username}</p>
-              <p>{dayjs(item.date).format("MMM DD, YYYY hh:mm:ss a")}</p>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-3xl" onClick={() => navigate(`/profile/${item.username}`)}>{item.username}</h2>
+              <p className="text-sm text-white/50">{dayjs(item.date).format("MMM DD, YYYY h:mm:ss a")}</p>
             </div>  
-            <p className="text-md">{item.description}</p>
+            <p className="text-md text-white/70">{item.description}</p>
             <div className={`flex mt-4`}>
-              <button className="mr-4">Like</button>
-              <button>Comment</button>
+              <button className="mr-4 text-white/50">Like</button>
+              <button className="text-white/50">Comment</button>
             </div>
             {/* {
               showComment[i]?.isDisplayed &&
