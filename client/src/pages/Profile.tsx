@@ -12,6 +12,13 @@ export const Profile = () => {
   const [post, setPost] = useState({
     description: ""
   })
+  const [updateProfile, setUpdateProfile] = useState({
+    username: "",
+    age: "",
+    birthday: "",
+    interest: []
+  })
+  const [isUpdate, setIsUpdate] = useState(false)
   const [isFollowing, setIsFollowing] = useState()
   const token = localStorage.getItem("token")
   const username = localStorage.getItem("username")
@@ -72,20 +79,30 @@ export const Profile = () => {
     })
     .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
   }
+
+  const onUpdateProfile = () => {
+    setIsUpdate(false)
+    console.log(updateProfile)
+  }
   return (
     <>
       <Header />
       <div className="p-4">
         <div className="flex justify-between items-start p-4 rounded-md mb-4 bg-white/5">
           <ul>
-            <li>Name: {profile?.username}</li>
-            <li>Age: {profile?.bio?.age}</li>
-            <li>Birthday {profile?.bio?.birthday}</li>
-            <li>Interests: {profile?.bio?.interests}</li>
-            <li>Followers: {profile?.followers?.length}</li>
+            <li className="mb-2">Username: {isUpdate ? <input defaultValue={profile?.username} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, username: e.target.value })} /> : profile?.username}</li>
+            <li className="mb-2">Age: {isUpdate ? <input defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
+            <li className="mb-2">Birthday {isUpdate ? <input defaultValue={profile?.bio?.birthday} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : profile?.bio?.birthday}</li>
+            <li className="mb-2">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value.split(",")})} /> : profile?.bio?.interests}</li>
+            <li className="mb-2">Followers: {profile?.followers?.length}</li>
           </ul>
           {id != username && <button className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
-          {id == username && <button className="bg-white/20 hover:bg-white/10 p-2 rounded-md">Update Profile</button>}
+          {id == username ?
+            isUpdate ?
+            <button className="bg-green-500 hover:bg-green-600 py-2 px-4 rounded-md" onClick={() => onUpdateProfile()}>Save</button>
+            : <button className="bg-white/20 hover:bg-white/10 p-2 rounded-md" onClick={() => setIsUpdate(true)}>Update Profile</button>
+            : undefined
+          }
         </div>
        {id == username && <div className="flex flex-col p-3 rounded-md bg-white/5 mb-12">
           <p className="mb-4">Create Post</p>
