@@ -26,12 +26,12 @@ router.get("/getUser", verifyJWT, async (req, res) => {
 })
 
 router.post("/editProfile", verifyJWT, async (req, res) => {
-  const { _id, values } = req.body
-
-  const result = await Users.findOneAndUpdate({_id},{ bio: {...values}})
+  const { username, values } = req.body
+  console.log("VAAL",{...values})
+  const result = await Users.findOneAndUpdate({username},{ bio: {...values}})
 
   if(result) {
-    res.status(200).send({message: "Edit profile successfully"})
+    res.status(200).send({message: "Edit profile successfully", result: values})
   } else {
     res.status(500).send({message: "Error"})
   }

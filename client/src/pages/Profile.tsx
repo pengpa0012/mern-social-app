@@ -1,4 +1,5 @@
 import axios from 'axios'
+import dayjs from 'dayjs'
 import Notiflix from 'notiflix'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -13,10 +14,9 @@ export const Profile = () => {
     description: ""
   })
   const [updateProfile, setUpdateProfile] = useState({
-    username: "",
     age: "",
     birthday: "",
-    interest: []
+    interest: ""
   })
   const [isUpdate, setIsUpdate] = useState(false)
   const [isFollowing, setIsFollowing] = useState()
@@ -82,18 +82,42 @@ export const Profile = () => {
 
   const onUpdateProfile = () => {
     setIsUpdate(false)
-    console.log(updateProfile)
+    axios.post(`http://localhost:3000/user/editProfile`, {
+      username,
+      values: {
+        age: updateProfile.age || profile?.bio?.age,
+        birthday: updateProfile.birthday || profile?.bio?.birthday,
+        interests: updateProfile.interest || profile?.bio?.interests,
+      }
+    }, 
+    {
+      headers: {
+        "x-access-token": token
+      }
+    }
+  )
+  .then((response: any) => {
+    setProfile({...profile, bio: {
+      age: response.data.result.age,
+      birthday: response.data.result.birthday,
+      interests: response.data.result.interests
+    }})
+    console.log(response)
+    Notiflix.Notify.success(`Update Successfully`)
+  })
+  .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
   }
+
   return (
     <>
       <Header />
       <div className="p-4">
         <div className="flex justify-between items-start p-4 rounded-md mb-4 bg-white/5">
           <ul>
-            <li className="mb-2">Username: {isUpdate ? <input defaultValue={profile?.username} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, username: e.target.value })} /> : profile?.username}</li>
+            <li className="mb-2">Username: {profile?.username}</li>
             <li className="mb-2">Age: {isUpdate ? <input defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
-            <li className="mb-2">Birthday {isUpdate ? <input defaultValue={profile?.bio?.birthday} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : profile?.bio?.birthday}</li>
-            <li className="mb-2">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value.split(",")})} /> : profile?.bio?.interests}</li>
+            <li className="mb-2">Birthday {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1" type="date" onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
+            <li className="mb-2">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>
             <li className="mb-2">Followers: {profile?.followers?.length}</li>
           </ul>
           {id != username && <button className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
