@@ -134,7 +134,7 @@ export const Profile = () => {
        {id == username && <div className="flex flex-col p-3 rounded-md bg-white/5 mb-12">
           <p className="mb-4">Create Post</p>
           {/* <input type="text" placeholder="Title" className="mb-2 rounded-md p-2" onChange={(e) => setPost({...post, title: e.target.value})} value={post.title} /> */}
-          <textarea placeholder="Type here..." className="rounded-md p-2 h-36 resize-none" onChange={(e) => setPost({description: e.target.value})} value={post.description}></textarea>
+          <textarea placeholder="Type here..." className="rounded-md p-2 h-36 resize-none" onChange={(e) => setPost({description: e.target.value})} value={post.description} maxLength={400}></textarea>
           <button className="py-2 px-8 mt-3 bg-green-500 hover:bg-green-600 rounded-md flex self-start" onClick={() => onPost()}>Post</button>
         </div>}
         <h2 className="mb-4">{id == username ? "Your posts" : `${id}'s Posts`}</h2>

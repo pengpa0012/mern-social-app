@@ -64,6 +64,7 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
   }
 
   const onDeletePost = (item: any) => {
+    if(!confirm("Are you sure?")) return
     axios.post(`http://localhost:3000/post/deletePost`, {
       _id: item._id
       }, 
@@ -93,7 +94,7 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
               <h2 className="text-3xl" onClick={() => navigate(`/profile/${item.username}`)}>{item.username}</h2>
               <p className="text-sm text-white/50">{dayjs(item.date).format("MMM DD, YYYY h:mm a")}</p>
             </div>  
-            <p className="text-md text-white/70">{item.description}</p>
+            <p className="text-md text-white/70 break-words">{item.description}</p>
             <div className={`flex mt-4`}>
               <button className={`mr-4 text-white/50 relative ${item.like.find((user: any) => user.user == userId) ? "text-blue-400 font-bold" : ""}`} onClick={() => onLikePost(item)}>
                <span>Like</span>
