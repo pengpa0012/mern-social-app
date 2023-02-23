@@ -27,7 +27,6 @@ router.get("/getUser", verifyJWT, async (req, res) => {
 
 router.post("/editProfile", verifyJWT, async (req, res) => {
   const { username, values } = req.body
-  console.log("VAAL",{...values})
   const result = await Users.findOneAndUpdate({username},{ bio: {...values}})
 
   if(result) {

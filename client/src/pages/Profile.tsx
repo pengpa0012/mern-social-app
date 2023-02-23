@@ -19,7 +19,7 @@ export const Profile = () => {
     interest: ""
   })
   const [isUpdate, setIsUpdate] = useState(false)
-  const [isFollowing, setIsFollowing] = useState()
+  const [isFollowing, setIsFollowing] = useState<boolean>()
   const token = localStorage.getItem("token")
   const username = localStorage.getItem("username")
 
@@ -29,7 +29,10 @@ export const Profile = () => {
         "x-access-token": token
       }
     }).then(data => setAllPosts(data.data.Posts))
+    getUser()
+  }, [id])
 
+  const getUser = () => {
     axios.get(`http://localhost:3000/user/getUser?username=${id}`, {
       headers: {
         "x-access-token": token
@@ -38,7 +41,7 @@ export const Profile = () => {
       setProfile(data.data.user)
       setIsFollowing(data.data.user.followers?.includes(username))
     })
-  }, [id])
+  }
 
   const onPost = () => {
     if(!post.description) return
@@ -75,11 +78,11 @@ export const Profile = () => {
       }
     )
     .then((response: any) => {
+      getUser()
       Notiflix.Notify.success(`${unfollow ? "Unfollow" : "Follow"} Successfully`)
     })
     .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
   }
-
   const onUpdateProfile = () => {
     setIsUpdate(false)
     axios.post(`http://localhost:3000/user/editProfile`, {
@@ -97,12 +100,7 @@ export const Profile = () => {
     }
   )
   .then((response: any) => {
-    setProfile({...profile, bio: {
-      age: response.data.result.age,
-      birthday: response.data.result.birthday,
-      interests: response.data.result.interests
-    }})
-    console.log(response)
+    getUser()
     Notiflix.Notify.success(`Update Successfully`)
   })
   .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
@@ -119,6 +117,7 @@ export const Profile = () => {
             <li className="mb-2">Birthday {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1" type="date" onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
             <li className="mb-2">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>
             <li className="mb-2">Followers: {profile?.followers?.length}</li>
+            <li className="mb-2">Following: {profile?.following?.length}</li>
           </ul>
           {id != username && <button className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
           {id == username ?

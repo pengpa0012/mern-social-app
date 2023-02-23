@@ -12,7 +12,7 @@ export const Post = ({posts}: any) => {
           <div className="mb-4 bg-white/10 p-4 rounded-md" key={i}>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-3xl" onClick={() => navigate(`/profile/${item.username}`)}>{item.username}</h2>
-              <p className="text-sm text-white/50">{dayjs(item.date).format("MMM DD, YYYY h:mm:ss a")}</p>
+              <p className="text-sm text-white/50">{dayjs(item.date).format("MMM DD, YYYY h:mm a")}</p>
             </div>  
             <p className="text-md text-white/70">{item.description}</p>
             <div className={`flex mt-4`}>
