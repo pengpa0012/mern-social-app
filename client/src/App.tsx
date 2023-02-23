@@ -12,9 +12,13 @@ function App() {
   const [allPosts, setAllPosts] = useState([])
   const token = localStorage.getItem("token")
   const username = localStorage.getItem("username")
+  const [showComment, setShowComment] = useState({
+    show: false,
+    index: 0
+  })
  
   const navigate = useNavigate()
-  console.log(allPosts)
+
   useEffect(() => {
     if(!isLoggedIn) {
      return navigate("/login")
@@ -35,18 +39,26 @@ function App() {
     }).then(data => setFollowingList(data.data.user.following))
   }, [])
 
+  const changeTab = (toggle: boolean) => {
+    setShowComment({
+      show: false,
+      index: 0
+    })
+    setPostTab(toggle)
+  }
+
   return (
     <div className="App">
       <Header />
       <div className="p-4">
         <ul className="mb-4 flex">
-          <li className={`mr-4 cursor-pointer ${postTab ? "bg-white/5" : ""} rounded-md p-2`} onClick={() => setPostTab(true)}>Following</li>
-          <li className={`cursor-pointer ${!postTab ? "bg-white/5" : ""} rounded-md p-2`} onClick={() => setPostTab(false)}>All Users</li>
+          <li className={`mr-4 cursor-pointer ${postTab ? "bg-white/5" : ""} rounded-md p-2`} onClick={() => changeTab(true)}>Following</li>
+          <li className={`cursor-pointer ${!postTab ? "bg-white/5" : ""} rounded-md p-2`} onClick={() => changeTab(false)}>All Users</li>
         </ul>
         {
           postTab ?
-          <Post posts={allPosts.filter((posts: any) => followingList.includes(posts.username))} setAllPosts={setAllPosts}/>
-          : <Post posts={allPosts} setAllPosts={setAllPosts} />
+          <Post posts={allPosts.filter((posts: any) => followingList.includes(posts.username))} setAllPosts={setAllPosts} showComment={showComment} setShowComment={setShowComment}/>
+          : <Post posts={allPosts} setAllPosts={setAllPosts} showComment={showComment} setShowComment={setShowComment} />
         }
       </div>
     </div>

@@ -5,11 +5,12 @@ import * as dayjs from 'dayjs'
 import axios from 'axios'
 import Notiflix from 'notiflix'
 
-export const Post = ({posts, setAllPosts}: any) => {
+export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => {
   const navigate = useNavigate()
   const token = localStorage.getItem("token")
   const userId = localStorage.getItem("userId")
   const username = localStorage.getItem("username")
+  const [comment, setComment] = useState("")
 
   const onLikePost = (item: any) => {
     
@@ -28,17 +29,40 @@ export const Post = ({posts, setAllPosts}: any) => {
       const alreadyLiked = newPosts[index].like.find((e: any) => e.user == userId)
       if(alreadyLiked) {
         newPosts[index].like.splice(newPosts[index].like.findIndex((e: any) => e.user == userId), 1)
-       console.log(newPosts)
         Notiflix.Notify.success("Unlike Post Successfully")
       } else {
-        Notiflix.Notify.success("Like Post Successfully")
         newPosts[index].like.push({user: userId, _id: item._id})
+        Notiflix.Notify.success("Like Post Successfully")
       }
       setAllPosts(newPosts)
     })
     .catch(err => Notiflix.Notify.failure(err.response.data.message))
   }
-
+  
+  const onComment = (item: any) => {
+    axios.post(`http://localhost:3000/post/commentPost`, {
+      _id: item._id,
+      comments: {
+        user: userId,
+        name: username,
+        text: comment
+      }
+    }, 
+    {
+    headers: {
+      "x-access-token": token
+    }
+  })
+  .then(res => {
+    const newPosts = [...posts]
+    const index = newPosts.findIndex(post => post._id == item._id)
+    newPosts[index].comments.push(res.data.message)
+    setAllPosts(newPosts)
+  })
+  .catch(err => Notiflix.Notify.failure(err.response.data.message))
+    setComment("")
+  }
+  console.log(posts)
   return (
     <div className="my-2">
       {
@@ -55,25 +79,28 @@ export const Post = ({posts, setAllPosts}: any) => {
                {item.like.length > 0 ? <span className="absolute -top-[3px] -right-[12px] -z-10 bg-white w-4 h-4 rounded-full text-xs grid place-items-center text-blue-500 font-bold">{item.like.length}</span>
                : undefined}
               </button>
-              <button className="text-white/50">Comment</button>
+              <button className="text-white/50" onClick={() => setShowComment({show: true, index: i})}>Comment</button>
             </div>
-            {/* {
-              showComment[i]?.isDisplayed &&
-              <div className="p-4 bg-black/20 rounded-md">
+            {
+              (showComment?.show && showComment?.index == i) &&
+              <div className="p-4 bg-black/20 rounded-md mt-4">
                 {
-                  [1,2,3].map((item, i) => (
+                  item.comments.map((item: any, i: number) => (
                     <div className="my-2 bg-black/10 p-2 rounded-md" key={i}>
                       <div className="flex items-center">
-                        <h1 className="mr-2">User</h1>
-                        <p>Date</p>
+                        <h1 className="mr-2">{item.name}</h1>
+                        <p>D{item.date}te</p>
                       </div>
-                      <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error, enim!</p>
+                      <p>{item.text}</p>
                     </div>
                   ))
                 }
-                <input type="text" className="w-full rounded-md p-2 bg-black/20 focus:outline-none" placeholder="Write a comment..." />
+                <div className="flex">
+                  <input type="text" className="w-full rounded-md p-2 bg-black/20 focus:outline-none" placeholder="Write a comment..." onChange={(e) => setComment(e.target.value)} value={comment}/>
+                  <button className="bg-green-500 hover:bg-green-600 px-2 rounded-md ml-2" onClick={() => onComment(item)}>Comment</button>
+                </div>
               </div>
-            } */}
+            }
           </div>
         ))
       }
