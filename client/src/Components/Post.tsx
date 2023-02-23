@@ -25,10 +25,16 @@ export const Post = ({posts, setAllPosts}: any) => {
     .then((response: any) => {
       const newPosts = [...posts]
       const index = newPosts.findIndex(post => post._id == item._id)
-      if(newPosts[index].like.find((e: any) => e.user == userId)) return
-      newPosts[index].like.push({user: userId, _id: item._id})
+      const alreadyLiked = newPosts[index].like.find((e: any) => e.user == userId)
+      if(alreadyLiked) {
+        newPosts[index].like.splice(newPosts[index].like.findIndex((e: any) => e.user == userId), 1)
+       console.log(newPosts)
+        Notiflix.Notify.success("Unlike Post Successfully")
+      } else {
+        Notiflix.Notify.success("Like Post Successfully")
+        newPosts[index].like.push({user: userId, _id: item._id})
+      }
       setAllPosts(newPosts)
-      Notiflix.Notify.success("Like Post Successfully")
     })
     .catch(err => Notiflix.Notify.failure(err.response.data.message))
   }
@@ -44,7 +50,11 @@ export const Post = ({posts, setAllPosts}: any) => {
             </div>  
             <p className="text-md text-white/70">{item.description}</p>
             <div className={`flex mt-4`}>
-              <button className={`mr-4 text-white/50 ${item.like.find((user: any) => user.user == userId) ? "text-blue-400 font-bold" : ""}`} onClick={() => onLikePost(item)}>Like</button>
+              <button className={`mr-4 text-white/50 relative ${item.like.find((user: any) => user.user == userId) ? "text-blue-400 font-bold" : ""}`} onClick={() => onLikePost(item)}>
+               <span>Like</span>
+               {item.like.length > 0 ? <span className="absolute -top-[3px] -right-[12px] -z-10 bg-white w-4 h-4 rounded-full text-xs grid place-items-center text-blue-500 font-bold">{item.like.length}</span>
+               : undefined}
+              </button>
               <button className="text-white/50">Comment</button>
             </div>
             {/* {

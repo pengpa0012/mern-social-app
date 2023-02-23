@@ -85,19 +85,19 @@ router.post("/likePost", verifyJWT, async (req, res) => {
   }
 
   if(post.like.filter(like => like.user == userId).length != 0) {
-    return res.status(500).send({ message: "Already liked the post" })
+    post.like = post.like.filter(like => like.user != userId)
+    res.status(200).send({ message: "Unliked Post" })
+  } else {
+    const newLike = {
+      user: userId
+    }
+    post.like.push(newLike)
+    res.status(200).send({ message: "Post Liked" })
   }
 
-  const newLike = {
-    user: userId
-  }
-
-  post.like.push(newLike)
   const result = await post.save()
 
-  if(result) {
-    res.status(200).send({ message: "Post Liked" })
-  } else {
+  if(!result) {
     res.status(200).send({ message: "Error Edit Post" })
   }
 })
