@@ -22,6 +22,10 @@ export const Profile = () => {
   const [isFollowing, setIsFollowing] = useState<boolean>()
   const token = localStorage.getItem("token")
   const username = localStorage.getItem("username")
+  const [showComment, setShowComment] = useState({
+    show: false,
+    index: 0
+  })
 
   useEffect(() => {
     axios.get("http://localhost:3000/post/getAllPosts", {
@@ -134,7 +138,7 @@ export const Profile = () => {
           <button className="py-2 px-8 mt-3 bg-green-500 hover:bg-green-600 rounded-md flex self-start" onClick={() => onPost()}>Post</button>
         </div>}
         <h2 className="mb-4">{id == username ? "Your posts" : `${id}'s Posts`}</h2>
-        <Post posts={allPosts.filter((posts: any) => id == username ? posts.username == username : posts.username == id)} setAllPosts={setAllPosts} />
+        <Post posts={allPosts.filter((posts: any) => id == username ? posts.username == username : posts.username == id)} setAllPosts={setAllPosts} showComment={showComment} setShowComment={setShowComment}  />
       </div>
     </>
   )

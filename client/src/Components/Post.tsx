@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { onShowComment } from '../utilities'
 import * as dayjs from 'dayjs'
 import axios from 'axios'
@@ -7,11 +7,11 @@ import Notiflix from 'notiflix'
 
 export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => {
   const navigate = useNavigate()
+  const {id} = useParams()
   const token = localStorage.getItem("token")
   const userId = localStorage.getItem("userId")
   const username = localStorage.getItem("username")
   const [comment, setComment] = useState("")
-
   const onLikePost = (item: any) => {
     
     axios.post(`http://localhost:3000/post/likePost`, {
@@ -29,10 +29,10 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
       const alreadyLiked = newPosts[index].like.find((e: any) => e.user == userId)
       if(alreadyLiked) {
         newPosts[index].like.splice(newPosts[index].like.findIndex((e: any) => e.user == userId), 1)
-        Notiflix.Notify.success("Unlike Post Successfully")
+        Notiflix.Notify.success("Unliked Post")
       } else {
         newPosts[index].like.push({user: userId, _id: item._id})
-        Notiflix.Notify.success("Like Post Successfully")
+        Notiflix.Notify.success("Liked Post")
       }
       setAllPosts(newPosts)
     })
@@ -47,27 +47,48 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
         name: username,
         text: comment
       }
-    }, 
-    {
-    headers: {
-      "x-access-token": token
-    }
-  })
-  .then(res => {
-    const newPosts = [...posts]
-    const index = newPosts.findIndex(post => post._id == item._id)
-    newPosts[index].comments.push(res.data.message)
-    setAllPosts(newPosts)
-  })
-  .catch(err => Notiflix.Notify.failure(err.response.data.message))
+      }, 
+      {
+      headers: {
+        "x-access-token": token
+      }
+    })
+    .then(res => {
+      const newPosts = [...posts]
+      const index = newPosts.findIndex(post => post._id == item._id)
+      newPosts[index].comments.push(res.data.message)
+      setAllPosts(newPosts)
+    })
+    .catch(err => Notiflix.Notify.failure(err.response.data.message))
     setComment("")
   }
-  console.log(posts)
+
+  const onDeletePost = (item: any) => {
+    axios.post(`http://localhost:3000/post/deletePost`, {
+      _id: item._id
+      }, 
+      {
+      headers: {
+        "x-access-token": token
+      }
+    })
+    .then(res => {
+      const newPosts = [...posts]
+      const index = newPosts.findIndex(post => post._id == item._id)
+      newPosts.splice(index, 1)
+      console.log(newPosts)
+      setAllPosts(newPosts)
+      Notiflix.Notify.success("Post deleted")
+    })
+    .catch(err => Notiflix.Notify.failure(err.response.data.message))
+  }
+
   return (
     <div className="my-2">
       {
         posts.sort((a: any, b: any) => new Date(b.date).valueOf() - new Date(a.date).valueOf()).map((item: any, i: number) => (
-          <div className="mb-4 bg-white/10 p-4 rounded-md" key={i}>
+          <div className="mb-4 bg-white/10 p-4 rounded-md relative" key={i}>
+            {username == id && <button className="absolute -top-[5px] -right-[5px] w-8 h-8 bg-red-500 hover:bg-red-600 grid place-items-center rounded-full cursor-pointer" onClick={() => onDeletePost(item)}>&#x2715;</button>}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-3xl" onClick={() => navigate(`/profile/${item.username}`)}>{item.username}</h2>
               <p className="text-sm text-white/50">{dayjs(item.date).format("MMM DD, YYYY h:mm a")}</p>
