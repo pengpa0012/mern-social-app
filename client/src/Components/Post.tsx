@@ -86,10 +86,10 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
               <div className="p-4 bg-black/20 rounded-md mt-4">
                 {
                   item.comments.map((item: any, i: number) => (
-                    <div className="my-2 bg-black/10 p-2 rounded-md" key={i}>
+                    <div className="my-2 bg-black/10 p-3 rounded-md" key={i}>
                       <div className="flex items-center">
                         <h1 className="mr-2">{item.name}</h1>
-                        <p>D{item.date}te</p>
+                        <p className="text-xs text-white/50">{dayjs(item.date).format("MMM DD, YYYY h:mm a")}</p>
                       </div>
                       <p>{item.text}</p>
                     </div>
