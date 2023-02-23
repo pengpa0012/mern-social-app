@@ -40,8 +40,8 @@ function App() {
       <Header />
       <div className="p-4">
         <ul className="mb-4 flex">
-          <li className="mr-4 cursor-pointer" onClick={() => setPostTab(true)}>Following</li>
-          <li className="cursor-pointer" onClick={() => setPostTab(false)}>All Users</li>
+          <li className={`mr-4 cursor-pointer ${postTab ? "bg-white/5" : ""} rounded-md p-2`} onClick={() => setPostTab(true)}>Following</li>
+          <li className={`cursor-pointer ${!postTab ? "bg-white/5" : ""} rounded-md p-2`} onClick={() => setPostTab(false)}>All Users</li>
         </ul>
         {
           postTab ?
