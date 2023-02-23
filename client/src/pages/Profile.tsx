@@ -114,7 +114,7 @@ export const Profile = () => {
           <ul>
             <li className="mb-2">Username: {profile?.username}</li>
             <li className="mb-2">Age: {isUpdate ? <input defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
-            <li className="mb-2">Birthday {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1" type="date" onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
+            <li className="mb-2">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1" type="date" onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
             <li className="mb-2">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>
             <li className="mb-2">Followers: {profile?.followers?.length}</li>
             <li className="mb-2">Following: {profile?.following?.length}</li>
@@ -134,7 +134,7 @@ export const Profile = () => {
           <button className="py-2 px-8 mt-3 bg-green-500 hover:bg-green-600 rounded-md flex self-start" onClick={() => onPost()}>Post</button>
         </div>}
         <h2 className="mb-4">{id == username ? "Your posts" : `${id}'s Posts`}</h2>
-        <Post posts={allPosts.filter((posts: any) => id == username ? posts.username == username : posts.username == id)}  />
+        <Post posts={allPosts.filter((posts: any) => id == username ? posts.username == username : posts.username == id)} setAllPosts={setAllPosts} />
       </div>
     </>
   )

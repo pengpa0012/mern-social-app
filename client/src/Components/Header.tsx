@@ -8,6 +8,8 @@ export const Header = () => {
   const onLogout = () => {
     if(confirm("Are you sure ?")) {
       localStorage.removeItem("token")
+      localStorage.removeItem("username")
+      localStorage.removeItem("userId")
       navigate("/login")
     }
   }

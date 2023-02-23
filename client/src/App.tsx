@@ -27,6 +27,7 @@ function App() {
         "x-access-token": token
       }
     }).then(data => setAllPosts(data.data.Posts))
+
     axios.get(`http://localhost:3000/user/getUser?username=${username}`, {
       headers: {
         "x-access-token": token
@@ -44,8 +45,8 @@ function App() {
         </ul>
         {
           postTab ?
-          <Post posts={allPosts.filter((posts: any) => followingList.includes(posts.username))} />
-          : <Post posts={allPosts} />
+          <Post posts={allPosts.filter((posts: any) => followingList.includes(posts.username))} setAllPosts={setAllPosts}/>
+          : <Post posts={allPosts} setAllPosts={setAllPosts} />
         }
       </div>
     </div>
