@@ -7,6 +7,7 @@ export const Header = () => {
   const username = localStorage.getItem("username")
   const [showDrawer, setShowDrawer] = useState(false)
   const onLogout = () => {
+    setShowDrawer(false)
     Notiflix.Confirm.show(
       'Logout',
       'Are you sure?',
@@ -31,14 +32,15 @@ export const Header = () => {
   }
 
   return (
-    <div className="flex justify-between p-4">
-      <Link to="/">Home</Link>
+    <div className="flex justify-between items-center p-4">
+      <Link to="/"><span className="p-3">Home</span></Link>
       <div className="relative">
-        <h2 onClick={() => setShowDrawer(!showDrawer)} className="cursor-pointer">LOGO</h2>
-        <div className={`absolute -left-6 bg-gray-700 rounded-md ${showDrawer ? "block" : "hidden"}`}>
-          <Link to={`/profile/${username}`}>
-            <h2 className="mr-4 hover:bg-gray-800 w-full p-2">Profile</h2>
-          </Link>
+        <h2 onClick={() => setShowDrawer(!showDrawer)} className="cursor-pointer p-3 font-bold border rounded-full w-12 h-12 text-center">{username?.charAt(0).toUpperCase()}</h2>
+        <div className={`absolute bg-gray-700 -left-5 rounded-md ${showDrawer ? "block" : "hidden"}`}>
+          <h2 className="mr-4 hover:bg-gray-800 w-full p-2" onClick={() => {
+            setShowDrawer(false)
+            navigate(`/profile/${username}`)
+          }}>Profile</h2>
           <h2 onClick={() => onLogout()} className="p-2 w-full hover:bg-gray-800 cursor-pointer">Logout</h2>
         </div>
       </div>
