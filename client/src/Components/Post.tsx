@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { onShowComment } from '../utilities'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import axios from 'axios'
 import Notiflix from 'notiflix'
 
