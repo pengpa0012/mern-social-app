@@ -17,7 +17,7 @@ export const FormCover = ({signup, onSubmit}: Props) => {
         <input type="password" placeholder="Repeat Password" className="p-2 rounded-md mb-2" name="repeat_password"  />
       }
       <button type="submit" className="mb-2 bg-green-500 hover:bg-green-600 p-2 rounded-md">{signup ? "Signup" : "Login"}</button>
-      <p className="text-md">{signup ? "Create" : "Already have"} an account? click <Link to={signup ? "/login" : "/signup" } className="text-blue-200 text-underline">here</Link></p>
+      <p className="text-md">{signup ? "Already have" : "Create"} an account? click <Link to={signup ? "/login" : "/signup" } className="text-blue-200 text-underline">here</Link></p>
     </form>
   )
 }

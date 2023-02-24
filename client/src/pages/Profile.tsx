@@ -26,6 +26,7 @@ export const Profile = () => {
     show: false,
     index: 0
   })
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     axios.get(`${import.meta.env.VITE_ENDPOINT}post/getAllPosts`, {
@@ -70,6 +71,7 @@ export const Profile = () => {
   }
 
   const handleFollow = (unfollow: boolean) => {
+    setIsLoading(true)
     axios.post(`${import.meta.env.VITE_ENDPOINT}user/${unfollow ? "unFollowUser" : "followUser"}`, {
         username: username,
         user_following: unfollow ? undefined : id,
@@ -82,6 +84,7 @@ export const Profile = () => {
       }
     )
     .then((response: any) => {
+      setIsLoading(false)
       getUser()
       Notiflix.Notify.success(`${unfollow ? "Unfollow" : "Follow"} Successfully`)
     })
@@ -123,7 +126,7 @@ export const Profile = () => {
             <li className="mb-2">Followers: {profile?.followers?.length}</li>
             <li className="mb-2">Following: {profile?.following?.length}</li>
           </ul>
-          {id != username && <button className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
+          {id != username && <button disabled={isLoading} className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
           {id == username ?
             isUpdate ?
             <button className="bg-green-500 hover:bg-green-600 py-2 px-4 rounded-md" onClick={() => onUpdateProfile()}>Save</button>

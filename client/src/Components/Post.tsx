@@ -40,6 +40,7 @@ export const Post = ({posts, allPost, setAllPosts, showComment, setShowComment}:
   }
   
   const onComment = (item: any) => {
+    if(!comment) return
     axios.post(`${import.meta.env.VITE_ENDPOINT}post/commentPost`, {
       _id: item._id,
       comments: {
