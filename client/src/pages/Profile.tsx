@@ -84,7 +84,9 @@ export const Profile = () => {
       }
     )
     .then((response: any) => {
-      setIsLoading(false)
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 1000)
       getUser()
       Notiflix.Notify.success(`${unfollow ? "Unfollow" : "Follow"} Successfully`)
     })
