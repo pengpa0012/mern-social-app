@@ -14,7 +14,7 @@ export const Post = ({posts, allPost, setAllPosts, showComment, setShowComment}:
   const [comment, setComment] = useState("")
 
   const onLikePost = (item: any) => {
-    axios.post(`http://localhost:3000/post/likePost`, {
+    axios.post(`${import.meta.env.VITE_ENDPOINT}post/likePost`, {
         _id: item._id,
         userId
       }, 
@@ -40,7 +40,7 @@ export const Post = ({posts, allPost, setAllPosts, showComment, setShowComment}:
   }
   
   const onComment = (item: any) => {
-    axios.post(`http://localhost:3000/post/commentPost`, {
+    axios.post(`${import.meta.env.VITE_ENDPOINT}post/commentPost`, {
       _id: item._id,
       comments: {
         user: userId,
@@ -70,7 +70,7 @@ export const Post = ({posts, allPost, setAllPosts, showComment, setShowComment}:
       'Delete',
       'Cancel',
       function okCb() {
-        axios.post(`http://localhost:3000/post/deletePost`, {
+        axios.post(`${import.meta.env.VITE_ENDPOINT}post/deletePost`, {
           _id: item._id
           }, 
           {

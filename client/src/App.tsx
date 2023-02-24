@@ -26,13 +26,13 @@ function App() {
   }, [isLoggedIn])
 
   useEffect(() => {
-    axios.get("http://localhost:3000/post/getAllPosts", {
+    axios.get(`${import.meta.env.VITE_ENDPOINT}post/getAllPosts`, {
       headers: {
         "x-access-token": token
       }
     }).then(data => setAllPosts(data.data.Posts))
 
-    axios.get(`http://localhost:3000/user/getUser?username=${username}`, {
+    axios.get(`${import.meta.env.VITE_ENDPOINT}user/getUser?username=${username}`, {
       headers: {
         "x-access-token": token
       }

@@ -13,7 +13,7 @@ export const Signup = () => {
     const password = form.elements['password'].value
     const repeatPassword = form.elements['repeat_password'].value
     if(!username || !password || !repeatPassword || password !== repeatPassword) return
-    axios.post(`http://localhost:3000/signup`, {
+    axios.post(`${import.meta.env.VITE_ENDPOINT}signup`, {
       username,
       password
     })

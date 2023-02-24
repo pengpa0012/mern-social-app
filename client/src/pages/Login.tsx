@@ -11,7 +11,7 @@ export const Login = () => {
     const username = form.elements['username'].value
     const password = form.elements['password'].value
     if(!username || !password) return
-    axios.post(`http://localhost:3000/login`, {
+    axios.post(`${import.meta.env.VITE_ENDPOINT}login`, {
       username,
       password
     })

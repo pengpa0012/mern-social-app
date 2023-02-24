@@ -28,7 +28,7 @@ export const Profile = () => {
   })
 
   useEffect(() => {
-    axios.get("http://localhost:3000/post/getAllPosts", {
+    axios.get(`${import.meta.env.VITE_ENDPOINT}post/getAllPosts`, {
       headers: {
         "x-access-token": token
       }
@@ -37,7 +37,7 @@ export const Profile = () => {
   }, [id])
 
   const getUser = () => {
-    axios.get(`http://localhost:3000/user/getUser?username=${id}`, {
+    axios.get(`${import.meta.env.VITE_ENDPOINT}user/getUser?username=${id}`, {
       headers: {
         "x-access-token": token
       }
@@ -50,7 +50,7 @@ export const Profile = () => {
   const onPost = () => {
     if(!post.description) return
 
-    axios.post(`http://localhost:3000/post/createPost`, {
+    axios.post(`${import.meta.env.VITE_ENDPOINT}post/createPost`, {
         username: id,
         description: post.description
       }, 
@@ -70,7 +70,7 @@ export const Profile = () => {
   }
 
   const handleFollow = (unfollow: boolean) => {
-    axios.post(`http://localhost:3000/user/${unfollow ? "unFollowUser" : "followUser"}`, {
+    axios.post(`${import.meta.env.VITE_ENDPOINT}user/${unfollow ? "unFollowUser" : "followUser"}`, {
         username: username,
         user_following: unfollow ? undefined : id,
         user_unfollow: unfollow ? id : undefined,
@@ -89,7 +89,7 @@ export const Profile = () => {
   }
   const onUpdateProfile = () => {
     setIsUpdate(false)
-    axios.post(`http://localhost:3000/user/editProfile`, {
+    axios.post(`${import.meta.env.VITE_ENDPOINT}user/editProfile`, {
       username,
       values: {
         age: updateProfile.age || profile?.bio?.age,
