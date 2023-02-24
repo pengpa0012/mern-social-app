@@ -1,3 +1,4 @@
+import Notiflix from "notiflix"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
@@ -6,12 +7,27 @@ export const Header = () => {
   const username = localStorage.getItem("username")
   const [showDrawer, setShowDrawer] = useState(false)
   const onLogout = () => {
-    if(confirm("Are you sure ?")) {
-      localStorage.removeItem("token")
-      localStorage.removeItem("username")
-      localStorage.removeItem("userId")
-      navigate("/login")
-    }
+    Notiflix.Confirm.show(
+      'Logout',
+      'Are you sure?',
+      'Logout',
+      'Cancel',
+      function okCb() {
+        localStorage.removeItem("token")
+        localStorage.removeItem("username")
+        localStorage.removeItem("userId")
+        navigate("/login")
+      },
+      function cancelCb() {
+      },
+      {
+        titleColor: '#fff',
+        backgroundColor: "#242424",
+        messageFontSize: '18px',
+        messageColor: "#fff",
+        okButtonBackground: '#ef4444'
+      },
+    )
   }
 
   return (

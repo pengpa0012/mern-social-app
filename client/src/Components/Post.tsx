@@ -64,24 +64,41 @@ export const Post = ({posts, allPost, setAllPosts, showComment, setShowComment}:
   }
 
   const onDeletePost = (item: any) => {
-    if(!confirm("Are you sure?")) return
-    axios.post(`http://localhost:3000/post/deletePost`, {
-      _id: item._id
-      }, 
+    Notiflix.Confirm.show(
+      'Delete Post',
+      'Are you sure?',
+      'Delete',
+      'Cancel',
+      function okCb() {
+        axios.post(`http://localhost:3000/post/deletePost`, {
+          _id: item._id
+          }, 
+          {
+          headers: {
+            "x-access-token": token
+          }
+        })
+        .then(res => {
+          const newPosts = [...allPost]
+          const index = newPosts.findIndex(post => post._id == item._id)
+          newPosts.splice(index, 1)
+          console.log(newPosts)
+          setAllPosts(newPosts)
+          Notiflix.Notify.success("Post deleted")
+        })
+        .catch(err => Notiflix.Notify.failure(err.response.data.message))
+      },
+      function cancelCb() {
+      },
       {
-      headers: {
-        "x-access-token": token
-      }
-    })
-    .then(res => {
-      const newPosts = [...allPost]
-      const index = newPosts.findIndex(post => post._id == item._id)
-      newPosts.splice(index, 1)
-      console.log(newPosts)
-      setAllPosts(newPosts)
-      Notiflix.Notify.success("Post deleted")
-    })
-    .catch(err => Notiflix.Notify.failure(err.response.data.message))
+        titleColor: '#fff',
+        backgroundColor: "#242424",
+        messageFontSize: '18px',
+        messageColor: "#fff",
+        okButtonBackground: '#ef4444'
+      },
+    );
+    
   }
 
   return (

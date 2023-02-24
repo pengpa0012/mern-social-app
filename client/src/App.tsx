@@ -58,7 +58,7 @@ function App() {
         {
           postTab ?
           <Post allPost={allPosts} posts={allPosts.filter((posts: any) => followingList.includes(posts.username))} setAllPosts={setAllPosts} showComment={showComment} setShowComment={setShowComment}/>
-          : <Post posts={allPosts} setAllPosts={setAllPosts} showComment={showComment} setShowComment={setShowComment} />
+          : <Post allPost={allPosts} posts={allPosts} setAllPosts={setAllPosts} showComment={showComment} setShowComment={setShowComment} />
         }
       </div>
     </div>
