@@ -5,15 +5,15 @@ import * as dayjs from 'dayjs'
 import axios from 'axios'
 import Notiflix from 'notiflix'
 
-export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => {
+export const Post = ({posts, allPost, setAllPosts, showComment, setShowComment}: any) => {
   const navigate = useNavigate()
   const {id} = useParams()
   const token = localStorage.getItem("token")
   const userId = localStorage.getItem("userId")
   const username = localStorage.getItem("username")
   const [comment, setComment] = useState("")
+
   const onLikePost = (item: any) => {
-    
     axios.post(`http://localhost:3000/post/likePost`, {
         _id: item._id,
         userId
@@ -24,7 +24,7 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
       }
     })
     .then((response: any) => {
-      const newPosts = [...posts]
+      const newPosts = [...allPost]
       const index = newPosts.findIndex(post => post._id == item._id)
       const alreadyLiked = newPosts[index].like.find((e: any) => e.user == userId)
       if(alreadyLiked) {
@@ -54,7 +54,7 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
       }
     })
     .then(res => {
-      const newPosts = [...posts]
+      const newPosts = [...allPost]
       const index = newPosts.findIndex(post => post._id == item._id)
       newPosts[index].comments.push(res.data.message)
       setAllPosts(newPosts)
@@ -74,7 +74,7 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
       }
     })
     .then(res => {
-      const newPosts = [...posts]
+      const newPosts = [...allPost]
       const index = newPosts.findIndex(post => post._id == item._id)
       newPosts.splice(index, 1)
       console.log(newPosts)
@@ -96,12 +96,16 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
             </div>  
             <p className="text-md text-white/70 break-words">{item.description}</p>
             <div className={`flex mt-4`}>
-              <button className={`mr-4 text-white/50 relative ${item.like.find((user: any) => user.user == userId) ? "text-blue-400 font-bold" : ""}`} onClick={() => onLikePost(item)}>
-               <span>Like</span>
+              <button className="mr-4 text-white/50 relative" onClick={() => onLikePost(item)}>
+               <span className={item.like.find((user: any) => user.user == userId) ? "text-blue-400 font-bold" : ""}>Like</span>
                {item.like.length > 0 ? <span className="absolute -top-[3px] -right-[12px] -z-10 bg-white w-4 h-4 rounded-full text-xs grid place-items-center text-blue-500 font-bold">{item.like.length}</span>
                : undefined}
               </button>
-              <button className="text-white/50" onClick={() => setShowComment({show: true, index: i})}>Comment</button>
+              <button className="text-white/50 relative" onClick={() => setShowComment({show: true, index: i})}>
+                Comment
+                {item.comments.length > 0 ? <span className="absolute -top-[3px] -right-[12px] -z-10 bg-red-500 w-4 h-4 rounded-full text-xs grid place-items-center text-white font-bold">{item.comments.length}</span>
+                : undefined}
+                </button>
             </div>
             {
               (showComment?.show && showComment?.index == i) &&
@@ -110,7 +114,7 @@ export const Post = ({posts, setAllPosts, showComment, setShowComment}: any) => 
                   {
                     item.comments.map((item: any, i: number) => (
                       <div className="my-2 bg-black/10 p-3 rounded-md" key={i}>
-                        <div className="flex items-center">
+                        <div className="flex items-center justify-between">
                           <h1 className="mr-2">{item.name}</h1>
                           <p className="text-xs text-white/50">{dayjs(item.date).format("MMM DD, YYYY h:mm a")}</p>
                         </div>
