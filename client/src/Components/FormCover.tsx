@@ -10,8 +10,8 @@ export const FormCover = ({signup, onSubmit}: Props) => {
   return (
     <form className="flex flex-col text-center w-full max-w-xl px-2" onSubmit={onSubmit}>
       <h1 className="text-3xl mb-6">MERN SOCIAL APP</h1>
-      <input type="text" placeholder="Username" className="p-2 rounded-md mb-2" name="username" />
-      <input type="password" placeholder="Password" className="p-2 rounded-md mb-2" name="password"  />
+      <input type="text" placeholder="Username" className="p-2 rounded-md mb-2 bg-white/10" name="username" />
+      <input type="password" placeholder="Password" className="p-2 rounded-md mb-2 bg-white/10" name="password"  />
       {
         signup &&
         <input type="password" placeholder="Repeat Password" className="p-2 rounded-md mb-2" name="repeat_password"  />
