@@ -109,8 +109,8 @@ export const Post = ({posts, allPost, setAllPosts, showComment, setShowComment}:
           <div className="mb-4 bg-white/10 p-4 rounded-md relative" key={i}>
             {username == id && <button className="absolute -top-[5px] -right-[5px] w-8 h-8 bg-red-500 hover:bg-red-600 grid place-items-center rounded-full cursor-pointer" onClick={() => onDeletePost(item)}>&#x2715;</button>}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-3xl" onClick={() => navigate(`/profile/${item?.username}`)}>{item?.username}</h2>
-              <p className="text-sm text-white/50">{dayjs(item?.date).format("MMM DD, YYYY h:mm a")}</p>
+              <h2 className="text-xl sm:text-3xl" onClick={() => navigate(`/profile/${item?.username}`)}>{item?.username}</h2>
+              <p className="text-xs sm:text-sm text-white/50">{dayjs(item?.date).format("MMM DD, YYYY h:mm a")}</p>
             </div>  
             <p className="text-md text-white/70 break-words">{item?.description}</p>
             <div className={`flex mt-4`}>
@@ -136,14 +136,14 @@ export const Post = ({posts, allPost, setAllPosts, showComment, setShowComment}:
                           <h1 className="mr-2">{item?.name}</h1>
                           <p className="text-xs text-white/50">{dayjs(item?.date).format("MMM DD, YYYY h:mm a")}</p>
                         </div>
-                        <p>{item?.text}</p>
+                        <p className="text-sm sm:text-md">{item?.text}</p>
                       </div>
                     ))
                   }
                 </div>
                 <div className="flex">
                   <input type="text" className="w-full rounded-md p-2 bg-black/20 focus:outline-none" placeholder="Write a comment..." onChange={(e) => setComment(e.target.value)} value={comment}/>
-                  <button className="bg-green-500 hover:bg-green-600 px-2 rounded-md ml-2" onClick={() => onComment(item)}>Comment</button>
+                  <button className="bg-green-500 hover:bg-green-600 px-2 rounded-md ml-2 text-sm sm:text-md" onClick={() => onComment(item)}>Comment</button>
                 </div>
               </div>
             }
