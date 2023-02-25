@@ -133,7 +133,9 @@ export const Profile = () => {
           <ul>
             <li className="mb-1 sm:mb-2 text-sm sm:text-md">Username: {profile?.username}</li>
             <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {isUpdate ? <input type="number" defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1 bg-white/10" type="date" onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
+            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1 bg-white/10" type="date" onKeyDown={(e) => {
+              e.preventDefault()
+            }} onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
             <li className="mb-1 sm:mb-2 text-sm sm:text-md">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>
             <li className="mb-1 sm:mb-2 text-sm sm:text-md">Followers: {profile?.followers?.length}</li>
             <li className="mb-1 sm:mb-2 text-sm sm:text-md">Following: {profile?.following?.length}</li>
