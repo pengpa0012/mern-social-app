@@ -98,7 +98,8 @@ export const Profile = () => {
     .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
   }
   const onUpdateProfile = () => {
-    if (Number(updateProfile.age) < 0 || updateProfile.age.toString().includes("-") || updateProfile.age.toString().includes("+")) {
+    
+    if (Number(updateProfile.age) < 0 || updateProfile.age.toString().includes("-") || updateProfile.age.toString().includes("+") || updateProfile.age.includes("e")) {
       Notiflix.Notify.failure("Input correct age!")
       return
     }
