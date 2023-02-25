@@ -10,6 +10,7 @@ export const Profile = () => {
   const {id} = useParams()
   const [allPosts, setAllPosts] = useState<any>([])
   const [profile, setProfile] = useState<any>({})
+  const [loading, setLoading] = useState(false)
   const [post, setPost] = useState({
     description: ""
   })
@@ -29,11 +30,15 @@ export const Profile = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    setLoading(true)
     axios.get(`${import.meta.env.VITE_ENDPOINT}post/getAllPosts`, {
       headers: {
         "x-access-token": token
       }
-    }).then(data => setAllPosts(data.data.Posts))
+    }).then(data => {
+      setLoading(false)
+      setAllPosts(data.data.Posts)
+    })
     getUser()
   }, [id])
 
@@ -138,12 +143,11 @@ export const Profile = () => {
         </div>
        {id == username && <div className="flex flex-col p-3 rounded-md bg-white/5 mb-12">
           <p className="mb-4">Create Post</p>
-          {/* <input type="text" placeholder="Title" className="mb-2 rounded-md p-2" onChange={(e) => setPost({...post, title: e.target.value})} value={post.title} /> */}
           <textarea placeholder="Type here..." className="rounded-md p-2 h-36 resize-none" onChange={(e) => setPost({description: e.target.value})} value={post.description} maxLength={400}></textarea>
           <button className="py-2 px-8 mt-3 bg-green-500 hover:bg-green-600 rounded-md flex self-start" onClick={() => onPost()}>Post</button>
         </div>}
         <h2 className="mb-4">{id == username ? "Your posts" : `${id}'s Posts`}</h2>
-        <Post allPost={allPosts} posts={allPosts.filter((posts: any) => id == username ? posts?.username == username : posts?.username == id)} setAllPosts={setAllPosts} showComment={showComment} setShowComment={setShowComment}  />
+        {loading ? <h1 className="text-center text-2xl py-12">Loading...</h1> : <Post allPost={allPosts} posts={allPosts.filter((posts: any) => id == username ? posts?.username == username : posts?.username == id)} setAllPosts={setAllPosts} showComment={showComment} setShowComment={setShowComment}  />}
       </div>
     </>
   )
