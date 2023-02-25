@@ -132,9 +132,9 @@ export const Profile = () => {
         <div className="flex justify-between items-start p-4 rounded-md mb-4 bg-white/5">
           <ul>
             <li className="mb-1 sm:mb-2 text-sm sm:text-md">Username: {profile?.username}</li>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {isUpdate ? <input type="number" defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1" type="date" onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>
+            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {isUpdate ? <input type="number" defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
+            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1 bg-white/10" type="date" onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
+            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>
             <li className="mb-1 sm:mb-2 text-sm sm:text-md">Followers: {profile?.followers?.length}</li>
             <li className="mb-1 sm:mb-2 text-sm sm:text-md">Following: {profile?.following?.length}</li>
           </ul>
