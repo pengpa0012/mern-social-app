@@ -98,11 +98,10 @@ export const Profile = () => {
     .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
   }
   const onUpdateProfile = () => {
-    if (!updateProfile.age || Number(updateProfile.age) < 0) {
+    if (Number(updateProfile.age) < 0 || updateProfile.age.toString().includes("-") || updateProfile.age.toString().includes("+")) {
       Notiflix.Notify.failure("Input correct age!")
       return
     }
-    console.log()
     setIsUpdate(false)
     axios.post(`${import.meta.env.VITE_ENDPOINT}user/editProfile`, {
       username,
