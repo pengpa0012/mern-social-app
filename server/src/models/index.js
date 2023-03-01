@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  profile_image: {
+    type: String
+  },
   followers: [{type: String}],
   following: [{type: String}],
   bio: {

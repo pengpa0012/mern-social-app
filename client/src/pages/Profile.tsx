@@ -14,11 +14,13 @@ export const Profile = () => {
   const [post, setPost] = useState({
     description: ""
   })
-  const [updateProfile, setUpdateProfile] = useState({
+  const [updateProfile, setUpdateProfile] = useState<any>({
+    profile_image: "",
     age: "",
     birthday: "",
     interest: ""
   })
+  const [previewIMG, setPreviewIMG] = useState("")
   const [isUpdate, setIsUpdate] = useState(false)
   const [isFollowing, setIsFollowing] = useState<boolean>()
   const token = localStorage.getItem("token")
@@ -98,12 +100,13 @@ export const Profile = () => {
     .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
   }
   const onUpdateProfile = () => {
-    
+    return console.log(updateProfile)
     if (Number(updateProfile.age) < 0 || updateProfile.age.toString().includes("-") || updateProfile.age.toString().includes("+") || updateProfile.age.includes("e")) {
       Notiflix.Notify.failure("Input correct age!")
       return
     }
     setIsUpdate(false)
+    //Upload first on firebase
     axios.post(`${import.meta.env.VITE_ENDPOINT}user/editProfile`, {
       username,
       values: {
@@ -125,21 +128,45 @@ export const Profile = () => {
   .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
   }
 
+  const onChangeProfile = (file: Blob | MediaSource) => {
+    const blob = window.URL.createObjectURL(file)
+    setPreviewIMG(blob)
+    setUpdateProfile({
+      ...updateProfile,
+      profile_image: file
+    })
+  }
+
+
   return (
     <>
       <Header />
       <div className="p-4">
         <div className="flex justify-between items-start p-4 rounded-md mb-4 bg-white/5">
-          <ul>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Username: {profile?.username}</li>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {isUpdate ? <input type="number" defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1 bg-white/10" type="date" onKeyDown={(e) => {
-              e.preventDefault()
-            }} onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Followers: {profile?.followers?.length}</li>
-            <li className="mb-1 sm:mb-2 text-sm sm:text-md">Following: {profile?.following?.length}</li>
-          </ul>
+          <div className="flex items-center">
+            <div className="relative overflow-hidden mr-4">
+              <img src={profile?.profile_image || previewIMG || "https://via.placeholder.com/200x200" } className="w-[200px] h-[200px] rounded-full object-cover" />
+              {id == username && isUpdate ?
+              <>
+                <div className="group absolute inset-0 grid place-items-center rounded-full bg-black/40">
+                  <label htmlFor="file" className="cursor-pointer block">&#x1F4F7;</label>
+                </div>
+                <input type="file" id="file" className="hidden" onChange={(e) => onChangeProfile(e.target.files![0])}/>
+              </>
+              : undefined}
+            </div>
+            <ul className="ml-4">
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Username: {profile?.username}</li>
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {isUpdate ? <input type="number" defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1 bg-white/10" type="date" onKeyDown={(e) => {
+                e.preventDefault()
+              }} onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Followers: {profile?.followers?.length}</li>
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Following: {profile?.following?.length}</li>
+            </ul>
+          </div>
+          
           {id != username && <button disabled={isLoading} className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
           {id == username ?
             isUpdate ?
