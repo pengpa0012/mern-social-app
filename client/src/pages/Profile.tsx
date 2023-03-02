@@ -59,6 +59,19 @@ export const Profile = () => {
     })
   }
 
+  const updateUser = (values: any) => {
+    return axios.post(`${import.meta.env.VITE_ENDPOINT}user/editProfile`, {
+      username,
+      values
+      }, 
+      {
+        headers: {
+          "x-access-token": token
+        }
+      }
+    )
+  }
+
   const onPost = () => {
     if(!post.description) return
 
@@ -103,61 +116,59 @@ export const Profile = () => {
     })
     .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
   }
+
   const onUpdateProfile = () => {
+    setIsUpdate(false)
+    updateUser({
+      age: updateProfile.age || profile?.bio?.age,
+      birthday: updateProfile.birthday || profile?.bio?.birthday,
+      interests: updateProfile.interest || profile?.bio?.interests,
+    }).then((response: any) => {
+      getUser()
+      Notiflix.Notify.success(`Update Successfully`)
+    })
+    .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
+  }
+
+  const onChangeProfile = (file: Blob | MediaSource) => {
+    if(file) {
+      const blob = window.URL.createObjectURL(file)
+      setPreviewIMG(blob)
+      setUpdateProfile({
+        ...updateProfile,
+        profile_image: file
+      })
+    }
+  }
+
+  const onUploadImage = () => {
     if(bytesToSize(updateProfile.profile_image.size).includes("MB")) {
       Notiflix.Notify.failure("Image size must be under 1MB")
       return
     }
-    setIsUpdate(false)
-    axios.post(`${import.meta.env.VITE_ENDPOINT}user/editProfile`, {
-      username,
-      values: {
-        age: updateProfile.age || profile?.bio?.age,
-        birthday: updateProfile.birthday || profile?.bio?.birthday,
-        interests: updateProfile.interest || profile?.bio?.interests,
-      }
-    }, 
-    {
-      headers: {
-        "x-access-token": token
-      }
+    if(profile.bio.profile_image){
+      const deletedImg = ref(storage, `${profile.bio.profile_image.split("/").at(-1).split("?")[0]}`)
+      deleteObject(deletedImg)
     }
-  )
-  .then((response: any) => {
-    getUser()
-    Notiflix.Notify.success(`Update Successfully`)
-  })
-  .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
-      
-    
+    const imageRef = ref(storage, `${updateProfile.profile_image.name + v4()}`);
+
+    uploadBytes(imageRef, updateProfile.profile_image).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        updateUser({
+          age: profile?.bio?.age,
+          birthday: profile?.bio?.birthday,
+          interests: profile?.bio?.interests,
+          profile_image: url
+        }).then((response: any) => {
+          getUser()
+          setPreviewIMG("")
+          Notiflix.Notify.success(`Update Successfully`)
+        })
+        .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
+      });
+    });
   }
 
-  const onChangeProfile = (file: Blob | MediaSource) => {
-    const blob = window.URL.createObjectURL(file)
-    setPreviewIMG(blob)
-    setUpdateProfile({
-      ...updateProfile,
-      profile_image: file
-    })
-    // if(profile.bio.profile_image){
-    //   console.log(profile)
-    //   const deletedImg = ref(storage, `${profile.bio.profile_image.split("/").at(-1).split("?")[0]}`)
-     
-    //   deleteObject(deletedImg).then(() => {
-    //    alert("Image deleted")
-    //   }).catch(console.error)
-    // }
-    // const imageRef = ref(storage, `${updateProfile.profile_image.name + v4()}`);
-
-    // uploadBytes(imageRef, updateProfile.profile_image).then((snapshot) => {
-    //   getDownloadURL(snapshot.ref).then((url) => {
-    //     if (Number(updateProfile.age) < 0 || updateProfile.age.toString().includes("-") || updateProfile.age.toString().includes("+") || updateProfile.age.includes("e")) {
-    //       Notiflix.Notify.failure("Input correct age!")
-    //       return
-    //     }
-    //   });
-    // });
-  }
   return (
     <>
       <Header />
@@ -177,7 +188,7 @@ export const Profile = () => {
                 : undefined}
               </div>
               {
-                updateProfile.profile_image && 
+                previewIMG && 
                 <div className="mt-4">
                   <button className="bg-gray-500 hover:bg-gray-600 py-1 px-2 rounded-md text-sm mr-2" onClick={() =>  {
                      setUpdateProfile({
@@ -186,7 +197,7 @@ export const Profile = () => {
                     })
                     setPreviewIMG("")
                   }}>Cancel</button>
-                  <button className="bg-green-500 hover:bg-green-600 py-1 px-2 rounded-md text-sm">Upload</button>
+                  <button className="bg-green-500 hover:bg-green-600 py-1 px-2 rounded-md text-sm" onClick={() => onUploadImage()}>Upload</button>
                 </div>
               }
             </div>
