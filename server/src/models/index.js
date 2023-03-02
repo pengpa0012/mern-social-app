@@ -10,12 +10,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  profile_image: {
-    type: String
-  },
+ 
   followers: [{type: String}],
   following: [{type: String}],
   bio: {
+    profile_image: {
+      type: String
+    },
     interests: {type: String},
     birthday: {
       type: String

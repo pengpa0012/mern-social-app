@@ -1,10 +1,14 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Notiflix from 'notiflix'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Header } from '../Components/Header'
 import { Post } from '../Components/Post'
+import { storage } from '../utilities/firebase'
+import { v4 } from "uuid";
+import { bytesToSize } from '../utilities'
 
 export const Profile = () => {
   const {id} = useParams()
@@ -100,13 +104,11 @@ export const Profile = () => {
     .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
   }
   const onUpdateProfile = () => {
-    return console.log(updateProfile)
-    if (Number(updateProfile.age) < 0 || updateProfile.age.toString().includes("-") || updateProfile.age.toString().includes("+") || updateProfile.age.includes("e")) {
-      Notiflix.Notify.failure("Input correct age!")
+    if(bytesToSize(updateProfile.profile_image.size).includes("MB")) {
+      Notiflix.Notify.failure("Image size must be under 1MB")
       return
     }
     setIsUpdate(false)
-    //Upload first on firebase
     axios.post(`${import.meta.env.VITE_ENDPOINT}user/editProfile`, {
       username,
       values: {
@@ -126,6 +128,8 @@ export const Profile = () => {
     Notiflix.Notify.success(`Update Successfully`)
   })
   .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
+      
+    
   }
 
   const onChangeProfile = (file: Blob | MediaSource) => {
@@ -135,25 +139,56 @@ export const Profile = () => {
       ...updateProfile,
       profile_image: file
     })
+    // if(profile.bio.profile_image){
+    //   console.log(profile)
+    //   const deletedImg = ref(storage, `${profile.bio.profile_image.split("/").at(-1).split("?")[0]}`)
+     
+    //   deleteObject(deletedImg).then(() => {
+    //    alert("Image deleted")
+    //   }).catch(console.error)
+    // }
+    // const imageRef = ref(storage, `${updateProfile.profile_image.name + v4()}`);
+
+    // uploadBytes(imageRef, updateProfile.profile_image).then((snapshot) => {
+    //   getDownloadURL(snapshot.ref).then((url) => {
+    //     if (Number(updateProfile.age) < 0 || updateProfile.age.toString().includes("-") || updateProfile.age.toString().includes("+") || updateProfile.age.includes("e")) {
+    //       Notiflix.Notify.failure("Input correct age!")
+    //       return
+    //     }
+    //   });
+    // });
   }
-
-
   return (
     <>
       <Header />
       <div className="p-4">
         <div className="flex justify-between items-start p-4 rounded-md mb-4 bg-white/5">
           <div className="flex items-center">
-            <div className="relative overflow-hidden mr-4">
-              <img src={profile?.profile_image || previewIMG || "https://via.placeholder.com/200x200" } className="w-[200px] h-[200px] rounded-full object-cover" />
-              {id == username && isUpdate ?
-              <>
-                <div className="group absolute inset-0 grid place-items-center rounded-full bg-black/40">
-                  <label htmlFor="file" className="cursor-pointer block">&#x1F4F7;</label>
+            <div className="text-center">
+              <div className="relative overflow-hidden mr-4">
+                <img src={previewIMG || profile?.bio?.profile_image || "https://via.placeholder.com/200x200" } className="w-[200px] h-[200px] rounded-full object-cover" />
+                {id == username ?
+                <>
+                  <div className="group absolute inset-0 grid place-items-center rounded-full hover:bg-black/40">
+                    <label htmlFor="file" className="cursor-pointer hidden group-hover:block">&#x1F4F7;</label>
+                  </div>
+                  <input type="file" id="file" className="hidden" onChange={(e) => onChangeProfile(e.target.files![0])}/>
+                </>
+                : undefined}
+              </div>
+              {
+                updateProfile.profile_image && 
+                <div className="mt-4">
+                  <button className="bg-gray-500 hover:bg-gray-600 py-1 px-2 rounded-md text-sm mr-2" onClick={() =>  {
+                     setUpdateProfile({
+                      ...updateProfile,
+                      profile_image: ""
+                    })
+                    setPreviewIMG("")
+                  }}>Cancel</button>
+                  <button className="bg-green-500 hover:bg-green-600 py-1 px-2 rounded-md text-sm">Upload</button>
                 </div>
-                <input type="file" id="file" className="hidden" onChange={(e) => onChangeProfile(e.target.files![0])}/>
-              </>
-              : undefined}
+              }
             </div>
             <ul className="ml-4">
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Username: {profile?.username}</li>
@@ -170,7 +205,10 @@ export const Profile = () => {
           {id != username && <button disabled={isLoading} className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
           {id == username ?
             isUpdate ?
-            <button className="bg-green-500 hover:bg-green-600 py-2 px-4 rounded-md text-sm sm:text-md" onClick={() => onUpdateProfile()}>Save</button>
+            <div>
+              <button className="bg-gray-500 hover:bg-gray-600 py-2 px-4 mr-2 rounded-md text-sm sm:text-md" onClick={() => setIsUpdate(false)}>Cancel</button>
+              <button className="bg-green-500 hover:bg-green-600 py-2 px-4 rounded-md text-sm sm:text-md" onClick={() => onUpdateProfile()}>Save</button>
+            </div>
             : <button className="bg-white/20 hover:bg-white/10 p-2 rounded-md text-sm sm:text-md" onClick={() => setIsUpdate(true)}>Update Profile</button>
             : undefined
           }
