@@ -173,34 +173,34 @@ export const Profile = () => {
     <>
       <Header />
       <div className="p-4">
-        <div className="flex justify-between items-start p-4 rounded-md mb-4 bg-white/5">
-          <div className="flex items-center">
-            <div className="text-center">
-              <div className="relative overflow-hidden mr-4">
-                <img src={previewIMG || profile?.bio?.profile_image || "https://via.placeholder.com/200x200" } className="w-[200px] h-[200px] rounded-full object-cover" />
-                {id == username ?
-                <>
-                  <div className="group absolute inset-0 grid place-items-center rounded-full hover:bg-black/40">
-                    <label htmlFor="file" className="cursor-pointer hidden group-hover:block">&#x1F4F7;</label>
-                  </div>
-                  <input type="file" id="file" className="hidden" onChange={(e) => onChangeProfile(e.target.files![0])}/>
-                </>
-                : undefined}
-              </div>
-              {
-                previewIMG && 
-                <div className="mt-4">
-                  <button className="bg-gray-500 hover:bg-gray-600 py-1 px-2 rounded-md text-sm mr-2" onClick={() =>  {
-                     setUpdateProfile({
-                      ...updateProfile,
-                      profile_image: ""
-                    })
-                    setPreviewIMG("")
-                  }}>Cancel</button>
-                  <button className="bg-green-500 hover:bg-green-600 py-1 px-2 rounded-md text-sm" onClick={() => onUploadImage()}>Upload</button>
+        <div className="flex flex-col md:flex-row items-stretch md:items-start p-4 rounded-md mb-4 bg-white/5">
+          <div className="text-center mb-12 md:mb-0">
+            <div className="relative overflow-hidden flex justify-center">
+              <img src={previewIMG || profile?.bio?.profile_image || "https://via.placeholder.com/200x200" } className="w-[200px] h-[200px] rounded-full object-cover" />
+              {id == username ?
+              <>
+                <div className="group absolute inset-0 grid place-items-center rounded-full md:hover:bg-black/40">
+                  <label htmlFor="file" className="cursor-pointer hidden group-hover:block">&#x1F4F7;</label>
                 </div>
-              }
+                <input type="file" id="file" className="hidden" onChange={(e) => onChangeProfile(e.target.files![0])}/>
+              </>
+              : undefined}
             </div>
+            {
+              previewIMG && 
+              <div className="mt-4">
+                <button className="bg-gray-500 hover:bg-gray-600 py-1 px-2 rounded-md text-sm mr-2" onClick={() =>  {
+                    setUpdateProfile({
+                    ...updateProfile,
+                    profile_image: ""
+                  })
+                  setPreviewIMG("")
+                }}>Cancel</button>
+                <button className="bg-green-500 hover:bg-green-600 py-1 px-2 rounded-md text-sm" onClick={() => onUploadImage()}>Upload</button>
+              </div>
+            }
+          </div>
+          <div className="flex grow-[2] flex-col sm:flex-row justify-between items-start">
             <ul className="ml-4">
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Username: {profile?.username}</li>
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {isUpdate ? <input type="number" defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
@@ -211,18 +211,19 @@ export const Profile = () => {
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Followers: {profile?.followers?.length}</li>
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Following: {profile?.following?.length}</li>
             </ul>
-          </div>
-          
-          {id != username && <button disabled={isLoading} className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
-          {id == username ?
-            isUpdate ?
-            <div>
-              <button className="bg-gray-500 hover:bg-gray-600 py-2 px-4 mr-2 rounded-md text-sm sm:text-md" onClick={() => setIsUpdate(false)}>Cancel</button>
-              <button className="bg-green-500 hover:bg-green-600 py-2 px-4 rounded-md text-sm sm:text-md" onClick={() => onUpdateProfile()}>Save</button>
+            <div className="mx-auto mt-4">
+              {id != username && <button disabled={isLoading} className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
+              {id == username ?
+                isUpdate ?
+                <div>
+                  <button className="bg-gray-500 hover:bg-gray-600 py-2 px-4 mr-2 rounded-md text-xs sm:text-md" onClick={() => setIsUpdate(false)}>Cancel</button>
+                  <button className="bg-green-500 hover:bg-green-600 py-2 px-4 rounded-md text-xs sm:text-md" onClick={() => onUpdateProfile()}>Save</button>
+                </div>
+                : <button className="bg-white/20 hover:bg-white/10 p-2 rounded-md text-xs sm:text-md" onClick={() => setIsUpdate(true)}>Update Profile</button>
+                : undefined
+              }
             </div>
-            : <button className="bg-white/20 hover:bg-white/10 p-2 rounded-md text-sm sm:text-md" onClick={() => setIsUpdate(true)}>Update Profile</button>
-            : undefined
-          }
+          </div>
         </div>
        {id == username && <div className="flex flex-col p-3 rounded-md bg-white/5 mb-12">
           <p className="mb-4">Create Post</p>
