@@ -211,7 +211,7 @@ export const Profile = () => {
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Followers: {profile?.followers?.length}</li>
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Following: {profile?.following?.length}</li>
             </ul>
-            <div className="mx-auto mt-4">
+            <div className="mx-auto md:mx-0 mt-4">
               {id != username && <button disabled={isLoading} className="text-xs bg-green-500 hover:bg-green-600 px-2 py-1 rounded-md" onClick={() => handleFollow(isFollowing ? true : false)}>{isFollowing ? "Unfollow" : "Follow"}</button>}
               {id == username ?
                 isUpdate ?
