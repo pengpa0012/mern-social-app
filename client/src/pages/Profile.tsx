@@ -8,7 +8,7 @@ import { Header } from '../Components/Header'
 import { Post } from '../Components/Post'
 import { storage } from '../utilities/firebase'
 import { v4 } from "uuid";
-import { bytesToSize } from '../utilities'
+import { bytesToSize, calculateAge } from '../utilities'
 
 export const Profile = () => {
   const {id} = useParams()
@@ -25,6 +25,7 @@ export const Profile = () => {
     interest: ""
   })
   const [previewIMG, setPreviewIMG] = useState("")
+  const [imageUrl, setImageUrl] = useState("")
   const [isUpdate, setIsUpdate] = useState(false)
   const [isFollowing, setIsFollowing] = useState<boolean>()
   const token = localStorage.getItem("token")
@@ -55,6 +56,7 @@ export const Profile = () => {
       }
     }).then(data => {
       setProfile(data.data.user)
+      setImageUrl(data.data.user.bio.profile_image)
       setIsFollowing(data.data.user.followers?.includes(username))
     })
   }
@@ -123,6 +125,7 @@ export const Profile = () => {
       age: updateProfile.age || profile?.bio?.age,
       birthday: updateProfile.birthday || profile?.bio?.birthday,
       interests: updateProfile.interest || profile?.bio?.interests,
+      profile_image: imageUrl
     }).then((response: any) => {
       getUser()
       Notiflix.Notify.success(`Update Successfully`)
@@ -162,6 +165,7 @@ export const Profile = () => {
         }).then((response: any) => {
           getUser()
           setPreviewIMG("")
+          setImageUrl(url)
           Notiflix.Notify.success(`Update Successfully`)
         })
         .catch((err) => Notiflix.Notify.failure(err.response?.data?.message))
@@ -203,8 +207,8 @@ export const Profile = () => {
           <div className="flex grow-[2] flex-col sm:flex-row justify-between items-start">
             <ul className="ml-4">
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Username: {profile?.username}</li>
-              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {isUpdate ? <input type="number" defaultValue={profile?.bio?.age} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, age: e.target.value})} /> : profile?.bio?.age}</li>
-              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD")} className="rounded-md px-2 py-1 bg-white/10" type="date" onKeyDown={(e) => {
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {calculateAge(profile?.bio?.birthday || "") || "N/A"}</li>
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD") || "N/A"} className="rounded-md px-2 py-1 bg-white/10" type="date" onKeyDown={(e) => {
                 e.preventDefault()
               }} onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>

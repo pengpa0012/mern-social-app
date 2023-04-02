@@ -26,3 +26,16 @@ export const bytesToSize = (bytes: number) => {
   if (i === 0) return `${bytes} ${sizes[i]})`
   return `${(bytes / (1024 ** i)).toFixed(1)} ${sizes[i]}`
 }
+
+export const calculateAge = (dateString: string) => {
+  // Parse the date string into year, month, and day values
+  const [year, month, day] = dateString.split('-').map(Number);
+  
+  // Calculate the difference between the current date and the birthdate
+  const birthDate = new Date(year, month - 1, day);
+  const ageDiff = Date.now() - birthDate.getTime();
+  
+  // Convert the age difference to a Date object and return the year component
+  const ageDate = new Date(ageDiff);
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
