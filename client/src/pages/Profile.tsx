@@ -207,7 +207,7 @@ export const Profile = () => {
           <div className="flex grow-[2] flex-col sm:flex-row justify-between items-start">
             <ul className="ml-4">
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Username: {profile?.username}</li>
-              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {calculateAge(profile?.bio?.birthday || "") || "N/A"}</li>
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {calculateAge(profile?.bio?.birthday || "")}</li>
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD") || "N/A"} className="rounded-md px-2 py-1 bg-white/10" type="date" onKeyDown={(e) => {
                 e.preventDefault()
               }} onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
