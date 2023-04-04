@@ -16,7 +16,7 @@ router.get("/getUsers", verifyJWT, async (req, res) => {
 
 router.get("/getUser", verifyJWT, async (req, res) => {
   const {username} = req.query
-  const result = await Users.findOne({username})
+  const result = await Users.findOne({username}, {password: 0})
 
   if(result) {
     res.status(200).send({user: result})
