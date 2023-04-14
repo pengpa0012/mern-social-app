@@ -16,13 +16,13 @@ export const Login = () => {
       password
     })
     .then(response => {
+      console.log(response.data)
       localStorage.setItem("token", response.data.accessToken)
       localStorage.setItem("username", username)
       localStorage.setItem("userId", response.data.result[0]._id)
       Notiflix.Notify.success(response.data.message)
       navigate("/")
     })
-    .catch((err) => Notiflix.Notify.failure(err.response.data.message))
   }
   return (
     <div className="grid place-items-center min-h-screen">

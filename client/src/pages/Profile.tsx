@@ -207,10 +207,10 @@ export const Profile = () => {
           <div className="flex grow-[2] flex-col sm:flex-row justify-between items-start">
             <ul className="ml-4">
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Username: {profile?.username}</li>
-              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {calculateAge(profile?.bio?.birthday || "")}</li>
+              <li className="mb-1 sm:mb-2 text-sm sm:text-md">Age: {calculateAge(profile?.bio?.birthday || "N/A")}</li>
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Birthday: {isUpdate ? <input defaultValue={dayjs(profile?.bio?.birthday).format("YYYY-MM-DD") || "N/A"} className="rounded-md px-2 py-1 bg-white/10" type="date" onKeyDown={(e) => {
                 e.preventDefault()
-              }} onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : dayjs(profile?.bio?.birthday).format("MMM DD, YYYY")}</li>
+              }} onChange={(e: any) => setUpdateProfile({...updateProfile, birthday: e.target.value})} /> : profile?.bio?.birthday ? dayjs(profile?.bio?.birthday).format("MMM DD, YYYY") : "N/A"}</li>
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Interests: {isUpdate ? <input defaultValue={profile?.bio?.interests} className="rounded-md px-2 py-1 bg-white/10" onChange={(e: any) => setUpdateProfile({...updateProfile, interest: e.target.value})} /> : profile?.bio?.interests}</li>
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Followers: {profile?.followers?.length}</li>
               <li className="mb-1 sm:mb-2 text-sm sm:text-md">Following: {profile?.following?.length}</li>

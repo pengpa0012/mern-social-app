@@ -44,5 +44,5 @@ export const calculateAge = (dateString: string) => {
  
    // Convert the age difference to a Date object and return the year component
    const ageDate = new Date(ageDiff);
-   return Math.abs(ageDate.getUTCFullYear() - 1970);
+   return Math.abs(ageDate.getUTCFullYear() - 1970)
 }
